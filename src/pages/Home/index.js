@@ -1,7 +1,14 @@
 import React from "react";
-import {Button} from './styles'
+import Header from '../../components/Header';
+import {HomeContainer} from './styles'
 
-const Home = () => (<Button>Hola</Button>);
+const Home = () => {
+  return (
+    <HomeContainer>
+      <Header></Header>
+    </HomeContainer>
+  )
+}
 
 export default Home;
 
