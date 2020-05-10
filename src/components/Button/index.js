@@ -1,5 +1,6 @@
 import React from 'react';
+import {ButtonContainer} from './styles';
 
-const Button = ({children, className}) => (<button className={className}>{children}</button>)
+const Button = ({children, className}) => (<ButtonContainer className={className}>{children}</ButtonContainer>)
 
 export default Button;
