@@ -3,6 +3,7 @@ import Header from '../../components/Header';
 import Open from '../../components/Open';
 import Close from '../../components/Close';
 import {HomeContainer} from './styles'
+import Spinner from "../../components/Spinner";
 
 const Home = () => {
   const [toClose, setToClose] = useState(false);
