@@ -11,11 +11,19 @@ const load = keyframes`
   }
 `;
 
+export const Blur = styled.div`
+  position:absolute;
+  z-index: 1; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%);
+
+`;
 export const Loader = styled.div`
   border-radius: 50%;
   width: 10em;
   height: 10em;
-  margin: 60px auto;
+  margin: auto;
   font-size: 10px;
   position: relative;
   text-indent: -9999em;

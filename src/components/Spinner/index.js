@@ -1,8 +1,10 @@
 import React from 'react';
-import { Loader } from './styles';
+import { Blur, Loader } from './styles';
 
 const Spinner = () => (
-  <Loader>Cargando...</Loader>
+  <Blur>
+    <Loader>Cargando...</Loader>
+  </Blur>
 );
 
 export default Spinner;

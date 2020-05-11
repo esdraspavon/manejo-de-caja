@@ -10,16 +10,20 @@ import Spinner from '../Spinner';
 const Open = ({toClose, setToClose}) => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
-
+  
   useEffect(() => {
-    apiCall(`${process.env.URL_BASE}/cashier/balance`)
+    if(!toClose) {
+      setData();
+      setLoading(true);
+      apiCall(`${process.env.URL_BASE}/cashier/balance`)
       .then(({results: {date_open, hour_open, value_previous_close, value_open, observation}}) => {
         setData({date_open, hour_open, value_previous_close, value_open, observation});
         setToClose(value_open !== null);
         setLoading(false);
       })
       .catch((error) => console.error('Ocurrió un error obteniendo la información'))
-  }, []) 
+    }
+  }, [toClose]) 
 
   const centsToDollars = (cents) => {
     return `$${(cents / 100.0).toFixed(2)}`;
@@ -41,7 +45,7 @@ const Open = ({toClose, setToClose}) => {
       })
       .catch((error) => console.error('Ocurrió un error actualizando los datos'))
   }
-  // console.log(data)
+
   return (
     <Container>
       {loading && <Spinner />}
@@ -79,7 +83,7 @@ const Open = ({toClose, setToClose}) => {
           </Label>
           {!toClose && 
             <ButtonContainer>
-              <Button disabled={data.value_open <= 0} type="submit">Enviar</Button>
+              <Button disabled={data.value_open <= 0 || loading} type="submit">Enviar</Button>
             </ButtonContainer>
           }
         </FormContainer>

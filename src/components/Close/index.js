@@ -7,10 +7,11 @@ import { FormContainer } from '../Open/styles'
 import { AddButton, ButtonContainer, SuccessMessage, ClosedMessage } from './styles'
 import { apiCall, centsToDollars } from '../../utils';
 import Expense from '../Expense';
+import Spinner from '../Spinner';
 
 
 const Close = ({toClose, setToClose}) => {
-  const [data, setData] = useState({});
+  const [data, setData] = useState({expenses: []});
   const [totalInSales, setTotalInSales] = useState();
   const [totalBox, setTotalBox] = useState();
   const [total, setTotal] = useState(0);
@@ -18,16 +19,25 @@ const Close = ({toClose, setToClose}) => {
   const [success, setSuccess] = useState();
 
   useEffect(() => {
-    apiCall(`${process.env.URL_BASE}/has/open/cashier/balance`)
+    if(toClose) {
+      setLoading(true);
+      setData(({expenses: []}));
+      setSuccess();
+      apiCall(`${process.env.URL_BASE}/has/open/cashier/balance`)
       .then(({close, card, value}) => {
-        setData({expenses: [], close, card, value});
+        console.log(close, card, value);
         setTotalInSales(parseInt(close) + parseInt(card));
         setTotalBox(parseInt(close) + parseInt(value));
         setTotal(parseInt(close) + parseInt(value));
+        setData({expenses: [], close, card, value});
         setLoading(false);
       })
-      .catch((error) => console.error('Ocurrió un error obteniendo la información'))
-  }, [])
+      .catch((error) => console.error('Ocurrió un error obteniendo la información: ', error))
+    } else {
+      setLoading(false)
+    }
+  }, [toClose]) 
+
 
   useEffect(() => {
     if(!data.expenses) setTotal(totalBox);
@@ -42,11 +52,12 @@ const Close = ({toClose, setToClose}) => {
 
   const onSubmit = () => {
     event.preventDefault();
+    setLoading(true);
     const expenses = data.expenses.filter((expense) => expense.name != "" && expense.value === 0);
     apiCall(`${process.env.URL_BASE}/cashier/balance/close/day`, 'POST', {...data, expenses})
       .then((response) => {
-        console.log(response)
         setToClose(false);
+        setLoading(false);
         setSuccess(true);
       })
       .catch((error) => console.error('Ocurrió un error actualizando la caja'))
@@ -63,9 +74,11 @@ const Close = ({toClose, setToClose}) => {
     expenses[index] = expenseData;
     setData({...data, expenses})
   }
+
   return (
     <Container>
-    {!loading && toClose ? (
+      {toClose && loading && <Spinner />}
+    {(toClose && data.value) ? (
     <FormContainer onSubmit={onSubmit}>
       <Input
         defaultValue={moment().format('YYYY/MM/DD')}
@@ -114,7 +127,7 @@ const Close = ({toClose, setToClose}) => {
         />
       ))}
       <ButtonContainer>
-        <Button disabled={total < 0} type="submit">Cerrar caja con {centsToDollars(total)}</Button>
+        <Button disabled={total < 0 || loading} type="submit">Cerrar caja con {centsToDollars(total)}</Button>
       </ButtonContainer>
     </FormContainer>
     ) : (
