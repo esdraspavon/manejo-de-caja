@@ -5,15 +5,18 @@ import { FormContainer, Label, InputTextarea, ButtonContainer } from './styles';
 import Button from '../Button';
 import { apiCall } from '../../utils';
 import Container from '../Container';
+import Spinner from '../Spinner';
 
 const Open = ({toClose, setToClose}) => {
   const [data, setData] = useState();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     apiCall(`${process.env.URL_BASE}/cashier/balance`)
       .then(({results: {date_open, hour_open, value_previous_close, value_open, observation}}) => {
-        setData({date_open, hour_open, value_previous_close, value_open, observation})
-        setToClose(value_open !== null)
+        setData({date_open, hour_open, value_previous_close, value_open, observation});
+        setToClose(value_open !== null);
+        setLoading(false);
       })
       .catch((error) => console.error('Ocurrió un error obteniendo la información'))
   }, []) 
@@ -30,13 +33,18 @@ const Open = ({toClose, setToClose}) => {
   const onSubmit = (event) => {
     event.preventDefault();
     if (data.value_open <= 0) return;
+    setLoading(true);
     apiCall(`${process.env.URL_BASE}/cashier/balance/open/day`, 'POST', data)
-      .then((response) => setToClose(true))
+      .then((response) => {
+        setToClose(true);
+        setLoading(false);
+      })
       .catch((error) => console.error('Ocurrió un error actualizando los datos'))
   }
   // console.log(data)
   return (
     <Container>
+      {loading && <Spinner />}
       {data && (
         <FormContainer onSubmit={onSubmit}>
           <Input
@@ -71,7 +79,7 @@ const Open = ({toClose, setToClose}) => {
           </Label>
           {!toClose && 
             <ButtonContainer>
-              <Button type="submit">Enviar</Button>
+              <Button disabled={data.value_open <= 0} type="submit">Enviar</Button>
             </ButtonContainer>
           }
         </FormContainer>

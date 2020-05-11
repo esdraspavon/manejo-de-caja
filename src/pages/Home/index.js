@@ -7,7 +7,6 @@ import Spinner from "../../components/Spinner";
 
 const Home = () => {
   const [toClose, setToClose] = useState(false);
-
   return (
     <HomeContainer>
       <Header />
