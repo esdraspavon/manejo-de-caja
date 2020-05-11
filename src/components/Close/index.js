@@ -25,7 +25,6 @@ const Close = ({toClose, setToClose}) => {
       setSuccess();
       apiCall(`${process.env.URL_BASE}/has/open/cashier/balance`)
       .then(({close, card, value}) => {
-        console.log(close, card, value);
         setTotalInSales(parseInt(close) + parseInt(card));
         setTotalBox(parseInt(close) + parseInt(value));
         setTotal(parseInt(close) + parseInt(value));
@@ -53,8 +52,8 @@ const Close = ({toClose, setToClose}) => {
   const onSubmit = () => {
     event.preventDefault();
     setLoading(true);
-    const expenses = data.expenses.filter((expense) => expense.name != "" && expense.value === 0);
-    apiCall(`${process.env.URL_BASE}/cashier/balance/close/day`, 'POST', {...data, expenses})
+    const expenses = data.expenses.filter((expense) => expense.value > 0);
+    apiCall(`${process.env.URL_BASE}/cashier/balance/close/day`, 'POST', {...data, value: total, expenses})
       .then((response) => {
         setToClose(false);
         setLoading(false);

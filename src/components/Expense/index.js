@@ -13,7 +13,7 @@ const Expense = ({name, value, setExpense, remove}) => {
   }
   return (
   <ExpenseContainer>
-    <Input value={name} onChange={handleNameChange} label="Motivo"/>
+    <Input value={name} required={value > 0} onChange={handleNameChange} label="Motivo"/>
     <Input value={centsToDollars(value)} onChange={handleValueChange} label="Valor"/>
     <DeleteIcon onClick={remove}>
       <svg width={15} viewBox="0 0 448 512" >
