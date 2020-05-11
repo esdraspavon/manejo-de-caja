@@ -7,11 +7,12 @@ import Spinner from "../../components/Spinner";
 
 const Home = () => {
   const [toClose, setToClose] = useState(false);
+  const [openActive, setOpenActive] = useState(true);
   return (
     <HomeContainer>
-      <Header />
-      <Open toClose={toClose} setToClose={setToClose} />
-      <Close toClose={toClose} setToClose={setToClose}/>
+      <Header tabActive={openActive} setTabActive={setOpenActive}/>
+      <Open openActive={openActive} toClose={toClose} setToClose={setToClose} />
+      <Close closeActive={!openActive} toClose={toClose} setToClose={setToClose}/>
     </HomeContainer>
   )
 }

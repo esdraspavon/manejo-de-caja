@@ -10,7 +10,7 @@ import Expense from '../Expense';
 import Spinner from '../Spinner';
 
 
-const Close = ({toClose, setToClose}) => {
+const Close = ({toClose, setToClose, closeActive}) => {
   const [data, setData] = useState({expenses: []});
   const [totalInSales, setTotalInSales] = useState();
   const [totalBox, setTotalBox] = useState();
@@ -75,7 +75,7 @@ const Close = ({toClose, setToClose}) => {
   }
 
   return (
-    <Container>
+    <Container className={closeActive ? 'active' : '' }>
       {toClose && loading && <Spinner />}
     {(toClose && data.value) ? (
     <FormContainer onSubmit={onSubmit}>
@@ -115,7 +115,7 @@ const Close = ({toClose, setToClose}) => {
         disabled={true}
       />
       <ButtonContainer>
-          <AddButton type="button" onClick={addExpense}>Agregar gasto</AddButton>
+          <AddButton disabled={loading} type="button" onClick={addExpense}>Agregar gasto</AddButton>
       </ButtonContainer>
       {data.expenses.map((expense, index) => (
         <Expense

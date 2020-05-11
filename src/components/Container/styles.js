@@ -7,4 +7,11 @@ export const Wrapper = styled.div`
   position: relative;
   margin: 0 auto auto;
   min-height:300px;
+  @media (max-width: 720px) {
+    display:none;
+    flex: 0 0 100%;
+    &.active{
+      display:block;
+    }
+  }
 `;

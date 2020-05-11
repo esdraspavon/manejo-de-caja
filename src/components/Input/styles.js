@@ -24,6 +24,10 @@ export const Label = styled.label`
   position: relative;
   color: #777;
   flex: 0 0 50%;
+  @media (max-width: 1050px) {
+    padding: 0;
+    flex: 0 0 100%;
+  }
 `;
 
 export const Error = styled.span`

@@ -14,4 +14,10 @@ export const Tab = styled.div`
  font-weight: bold;
  box-sizing:border-box;
  text-align: center;
+ @media (max-width: 720px) {
+   cursor:pointer;
+   &.active{
+    background: rgba(255, 255, 255, .3);
+   }
+ }
 `;

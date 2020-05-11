@@ -7,7 +7,7 @@ import { apiCall } from '../../utils';
 import Container from '../Container';
 import Spinner from '../Spinner';
 
-const Open = ({toClose, setToClose}) => {
+const Open = ({toClose, setToClose, openActive}) => {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
   
@@ -47,7 +47,7 @@ const Open = ({toClose, setToClose}) => {
   }
 
   return (
-    <Container>
+    <Container className={openActive ? 'active' : '' }>
       {loading && <Spinner />}
       {data && (
         <FormContainer onSubmit={onSubmit}>
