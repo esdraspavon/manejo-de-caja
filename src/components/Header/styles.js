@@ -13,4 +13,5 @@ export const Tab = styled.div`
  padding: 20px;
  font-weight: bold;
  box-sizing:border-box;
+ text-align: center;
 `;
