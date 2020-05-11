@@ -75,7 +75,8 @@ const Open = ({toClose, setToClose}) => {
           <Label>
             Observaciones
             <InputTextarea
-            defaultValue={data.observation}
+            value={data.observation}
+            onChange={({target}) => setData({...data, observation: target.value})}
             label="Observaciones"
             rows={4}
             disabled={toClose}
