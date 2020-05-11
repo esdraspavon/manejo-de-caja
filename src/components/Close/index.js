@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import Input from '../Input';
 import Button from '../Button';
+import Container from '../Container';
 import { FormContainer } from '../Open/styles'
-import { AddButton, ButtonContainer } from './styles'
+import { AddButton, ButtonContainer, SuccessMessage, ClosedMessage } from './styles'
 import { apiCall, centsToDollars } from '../../utils';
 import Expense from '../Expense';
 
 
-const Close = () => {
+const Close = ({toClose, setToClose}) => {
   const [data, setData] = useState({});
   const [totalInSales, setTotalInSales] = useState();
   const [totalBox, setTotalBox] = useState();
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [success, setSuccess] = useState();
 
   useEffect(() => {
     apiCall(`${process.env.URL_BASE}/has/open/cashier/balance`)
@@ -42,7 +44,11 @@ const Close = () => {
     event.preventDefault();
     const expenses = data.expenses.filter((expense) => expense.name != "" && expense.value === 0);
     apiCall(`${process.env.URL_BASE}/cashier/balance/close/day`, 'POST', {...data, expenses})
-      .then((response) => console.log(response))
+      .then((response) => {
+        console.log(response)
+        setToClose(false);
+        setSuccess(true);
+      })
       .catch((error) => console.error('Ocurrió un error actualizando la caja'))
   }
 
@@ -58,8 +64,8 @@ const Close = () => {
     setData({...data, expenses})
   }
   return (
-    <>
-    {!loading && (
+    <Container>
+    {!loading && toClose ? (
     <FormContainer onSubmit={onSubmit}>
       <Input
         defaultValue={moment().format('YYYY/MM/DD')}
@@ -111,8 +117,16 @@ const Close = () => {
         <Button disabled={total < 0} type="submit">Cerrar caja con {centsToDollars(total)}</Button>
       </ButtonContainer>
     </FormContainer>
+    ) : (
+      <ClosedMessage>
+        <svg viewBox="0 0 384 512" width={40}>
+          <path fill="#aaa" d="M369.9 97.9L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM332.1 128H256V51.9l76.1 76.1zM48 464V48h160v104c0 13.3 10.7 24 24 24h104v288H48zm108.6-251.3l6.5 104c.4 6.3 5.6 11.3 12 11.3h33.8c6.3 0 11.6-4.9 12-11.3l6.5-104c.4-6.9-5.1-12.7-12-12.7h-46.8c-6.9 0-12.4 5.8-12 12.7zM232 384c0 22.1-17.9 40-40 40s-40-17.9-40-40 17.9-40 40-40 40 17.9 40 40z" />
+        </svg>
+        <p>No existe información para mostrar</p>
+      </ClosedMessage>
     )}
-    </>
+    {success && <SuccessMessage>Información guardada exitosamente</SuccessMessage>}
+    </Container>
   )
 }
 

@@ -2,9 +2,6 @@ import styled from 'styled-components';
 import {Label as LabelContainer} from '../Input/styles';
 
 export const FormContainer = styled.form`
-flex: 0 0 50%;
-padding: 50px;
-box-sizing:border-box;
 display: flex;
 flex-wrap: wrap;
 align-content: flex-start;

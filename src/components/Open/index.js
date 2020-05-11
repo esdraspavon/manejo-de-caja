@@ -4,14 +4,17 @@ import Input from '../Input';
 import { FormContainer, Label, InputTextarea, ButtonContainer } from './styles';
 import Button from '../Button';
 import { apiCall } from '../../utils';
+import Container from '../Container';
 
-const Open = () => {
-  const [data, setData] = useState({});
+const Open = ({toClose, setToClose}) => {
+  const [data, setData] = useState();
 
   useEffect(() => {
     apiCall(`${process.env.URL_BASE}/cashier/balance`)
-      .then(({results: {date_open, hour_open, value_previous_close, value_open, observation}}) =>
-        setData({date_open, hour_open, value_previous_close, value_open, observation}))
+      .then(({results: {date_open, hour_open, value_previous_close, value_open, observation}}) => {
+        setData({date_open, hour_open, value_previous_close, value_open, observation})
+        setToClose(value_open !== null)
+      })
       .catch((error) => console.error('Ocurrió un error obteniendo la información'))
   }, []) 
 
@@ -28,48 +31,52 @@ const Open = () => {
     event.preventDefault();
     if (data.value_open <= 0) return;
     apiCall(`${process.env.URL_BASE}/cashier/balance/open/day`, 'POST', data)
-      .then((response) => console.log(response))
+      .then((response) => setToClose(true))
       .catch((error) => console.error('Ocurrió un error actualizando los datos'))
   }
   // console.log(data)
   return (
-      <FormContainer onSubmit={onSubmit}>
-        <Input
-          defaultValue={data.date_open}
-          label="Fecha (yyyy/mm/dd)"
-          disabled={true}
+    <Container>
+      {data && (
+        <FormContainer onSubmit={onSubmit}>
+          <Input
+            defaultValue={data.date_open}
+            label="Fecha (yyyy/mm/dd)"
+            disabled={true}
+            />
+          <Input
+            defaultValue={data.hour_open}
+            label="Hora (hh:mm)"
+            disabled={true}
           />
-        <Input
-          defaultValue={data.hour_open}
-          label="Hora (hh:mm)"
-          disabled={true}
-        />
-        <Input
-          defaultValue={data.value_previous_close}
-          label="Total anterior"
-          disabled={true}
-        />
-        <Input
-          value={centsToDollars(data.value_open || 0)}
-          onChange={handleInputNumber}
-          label="Total inicial"
-          disabled={data.value_open}
-        />
-        <Label>
-          Observaciones
-          <InputTextarea
-           defaultValue={data.observation}
-           label="Observaciones"
-           rows={4}
-           disabled={data.value_open}
+          <Input
+            defaultValue={centsToDollars(data.value_previous_close)}
+            label="Total anterior"
+            disabled={true}
           />
-        </Label>
-        {!data.value_open && 
-          <ButtonContainer>
-            <Button type="submit">Enviar</Button>
-          </ButtonContainer>
-        }
-      </FormContainer>
+          <Input
+            value={centsToDollars(data.value_open || 0)}
+            onChange={handleInputNumber}
+            label="Total inicial"
+            disabled={toClose}
+          />
+          <Label>
+            Observaciones
+            <InputTextarea
+            defaultValue={data.observation}
+            label="Observaciones"
+            rows={4}
+            disabled={toClose}
+            />
+          </Label>
+          {!toClose && 
+            <ButtonContainer>
+              <Button type="submit">Enviar</Button>
+            </ButtonContainer>
+          }
+        </FormContainer>
+      )}
+    </Container>
   )
 }
 
