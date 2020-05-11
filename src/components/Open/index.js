@@ -21,7 +21,7 @@ const Open = () => {
 
   const handleInputNumber = ({target}) => {
     let value = target.value.replace('$','').replace('.','');
-    setData({...data, value_open: parseInt(value)})
+    setData({...data, value_open: parseInt(value) || 0})
   }
 
   const onSubmit = (event) => {
@@ -31,6 +31,7 @@ const Open = () => {
       .then((response) => console.log(response))
       .catch((error) => console.error('Ocurrió un error actualizando los datos'))
   }
+  // console.log(data)
   return (
       <FormContainer onSubmit={onSubmit}>
         <Input

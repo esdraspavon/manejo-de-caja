@@ -12,4 +12,5 @@ export const Tab = styled.div`
  flex: 0 0 50%;
  padding: 20px;
  font-weight: bold;
+ box-sizing:border-box;
 `;

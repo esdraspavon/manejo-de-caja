@@ -7,6 +7,7 @@ padding: 50px;
 box-sizing:border-box;
 display: flex;
 flex-wrap: wrap;
+align-content: flex-start;
 `;
 
 export const InputTextarea = styled.textarea`

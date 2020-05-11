@@ -22,3 +22,7 @@ export const apiCall = (url, method = 'GET', body) => {
       .catch((err) => rej(err));
   });
 };
+
+export const centsToDollars = (cents) => {
+  return `$${(cents / 100.0).toFixed(2)}`;
+}
